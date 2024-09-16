@@ -27,7 +27,7 @@ function setHelloWorldMessage(index) {
     // Update the Hello World message and language
     const [lang, message] = helloWorldMessages[index];
     messageEl.textContent = message;
-    titleEl.textContent = `Hello World in ${lang}`;
+    titleEl.textContent = `Salut in ${lang}`;
 
     // Set the largest possible Hello World message text font size that fits
     utils.fitTextResponsive(messageEl, mainEl);
