@@ -3,6 +3,10 @@ const response = await fetch("https://restcountries.com/v3.1/all");
 
 const pays = await response.json();
 let html = "";
+html += "<tr>"
+html += "<th>Name common</th>"
+html += "<th>Image</th>"
+html += "</tr>"
 pays.forEach(pays => {
     html += "<tr>";
     html += `<td> ${pays.name.common} </td>`;
