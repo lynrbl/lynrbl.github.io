@@ -1,7 +1,7 @@
-header{
+header {
     text-align: center;
 }
-/* Styling the table container */
+
 #tableau {
     width: 80%;
     margin: 50px auto;
@@ -10,7 +10,7 @@ header{
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Styling the table headers */
+
 #tableau th {
     background-color: #4CAF50;
     color: white;
@@ -18,7 +18,7 @@ header{
     text-align: left;
 }
 
-/* Table row styling */
+
 #tableau tr:nth-child(even) {
     background-color: #f2f2f2;
 }
@@ -28,20 +28,20 @@ header{
     transition: background-color 0.3s ease;
 }
 
-/* Table cell styling */
+
 #tableau td {
     padding: 12px;
     border-bottom: 1px solid #ddd;
     text-align: center;
 }
 
-/* Styling the country names */
+
 #tableau td:first-child {
     font-weight: bold;
     text-align: left;
 }
 
-/* Flag image styling */
+
 #tableau img {
     width: 40px;
     height: auto;
