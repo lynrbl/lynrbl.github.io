@@ -20,7 +20,7 @@ function showMarkerDetails(marker) {
         <div class="w3-container">
             <h3>Détails de l'Objet Caché</h3>
             <p>Coordonnées : ${marker.getLatLng().toString()}</p>
-            <button onclick="backToMap()" class="w3-button w3-green">Retour à la carte</button>
+            <a href="index.html"><button class="w3-button w3-green">Retour à la carte</button></a>
         </div>
     `;
     document.body.innerHTML = details;
