@@ -7,10 +7,10 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 
 const markers = [
-    L.marker([43.2044, 6.432]).addTo(map),
-    L.marker([42.2044, 7.432]).addTo(map),
-    L.marker([47.2044, 6.132]).addTo(map),
-    L.marker([41.2044, 6.142]).addTo(map),
+    L.marker([46.236853, 6.126938]).addTo(map),
+    L.marker([46.19017, 6.114063]).addTo(map),
+    L.marker([46.190764, 6.151485]).addTo(map),
+    L.marker([46.181257, 6.102905]).addTo(map),
     L.marker([46.2044, 6.143]).addTo(map),
     L.marker([43.2044, 5.32]).addTo(map),
     L.marker([49.2044, 6.2]).addTo(map),
