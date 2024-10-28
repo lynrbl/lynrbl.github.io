@@ -1,8 +1,8 @@
 "use strict";
 
-const map = L.map('map').setView([46.2044, 6.1432], 13); 
+const map = L.map('map').setView([46.2044, 6.1432], 13);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  maxZoom: 19,
+    maxZoom: 19,
 }).addTo(map);
 
 
@@ -14,7 +14,13 @@ map.on('click', (e) => {
         showMarkerDetails(marker);
     });
 });
-
+const marker1 = L.marker([43.2044, 6.1432]).addTo(map);
+const marker2 = L.marker([42.2044, 6.1432]).addTo(map);
+const marker3 = L.marker([47.2044, 6.1432]).addTo(map);
+const marker4 = L.marker([41.2044, 6.1432]).addTo(map);
+const marker5 = L.marker([46.2044, 6.1432]).addTo(map);
+const marker6 = L.marker([43.2044, 6.1432]).addTo(map);
+const marker7 = L.marker([49.2044, 6.1432]).addTo(map);
 function showMarkerDetails(marker) {
     const details = `
         <div class="w3-container">
@@ -34,7 +40,7 @@ async function openCamera() {
         const stream = await navigator.mediaDevices.getUserMedia({ video: true });
         const videoElement = document.getElementById('video');
         videoElement.srcObject = stream;
-        videoElement.style.display = 'block'; 
+        videoElement.style.display = 'block';
     } catch (err) {
         console.error("Erreur d'accès à la caméra", err);
     }
