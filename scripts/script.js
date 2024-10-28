@@ -6,25 +6,23 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 
-const markers = [
-    L.marker([46.236853, 6.126938]).addTo(map),
-    L.marker([46.19017, 6.114063]).addTo(map),
-    L.marker([46.190764, 6.151485]).addTo(map),
-    L.marker([46.181257, 6.102905]).addTo(map),
-    L.marker([46.2044, 6.143]).addTo(map),
-    L.marker([43.2044, 5.32]).addTo(map),
-    L.marker([49.2044, 6.2]).addTo(map),
-];
 
-map.on('click', (e) => {
-    const { lat, lng } = e.latlng;
-    const newMarker = L.marker([lat, lng]).addTo(map);
-
-    newMarker.on('click', () => {
-        showMarkerDetails(newMarker);
+const marker1 = L.marker([46.236853, 6.126938]).addTo(map);
+const marker2 = L.marker([46.19017, 6.114063]).addTo(map);
+const marker3 = L.marker([46.190764, 6.151485]).addTo(map);
+const marker4 = L.marker([46.181257, 6.102905]).addTo(map);
+    marker1.on('click', () => {
+        showMarkerDetails(marker1);
     });
-});
-
+    marker2.on('click', () => {
+        showMarkerDetails(marker2);
+    });
+    marker3.on('click', () => {
+        showMarkerDetails(marker3);
+    });
+    marker4.on('click', () => {
+        showMarkerDetails(marker4);
+    });
 function showMarkerDetails(marker) {
     const details = `
         <div class="w3-container">
