@@ -14,13 +14,13 @@ map.on('click', (e) => {
         showMarkerDetails(marker);
     });
 });
-const marker1 = L.marker([43.2044, 6.1432]).addTo(map);
-const marker2 = L.marker([42.2044, 6.1432]).addTo(map);
-const marker3 = L.marker([47.2044, 6.1432]).addTo(map);
-const marker4 = L.marker([41.2044, 6.1432]).addTo(map);
-const marker5 = L.marker([46.2044, 6.1432]).addTo(map);
-const marker6 = L.marker([43.2044, 6.1432]).addTo(map);
-const marker7 = L.marker([49.2044, 6.1432]).addTo(map);
+const marker1 = L.marker([43.2044, 6.432]).addTo(map);
+const marker2 = L.marker([42.2044, 7.432]).addTo(map);
+const marker3 = L.marker([47.2044, 6.132]).addTo(map);
+const marker4 = L.marker([41.2044, 6.142]).addTo(map);
+const marker5 = L.marker([46.2044, 6.143]).addTo(map);
+const marker6 = L.marker([43.2044, 5.32]).addTo(map);
+const marker7 = L.marker([49.2044, 6.2]).addTo(map);
 function showMarkerDetails(marker) {
     const details = `
         <div class="w3-container">
