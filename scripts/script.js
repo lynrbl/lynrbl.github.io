@@ -38,6 +38,7 @@ function backToMap() {
     location.reload();
 }
 
+document.getElementById('cameraButton').addEventListener('click', openCamera);
 async function openCamera() {
     try {
         const stream = await navigator.mediaDevices.getUserMedia({ video: true });
