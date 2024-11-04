@@ -14,14 +14,22 @@
             height: 500px;
             width: 100%;
         }
+        #captured-image {
+            width: 100%;
+            height: auto;
+            display: none;
+        }
     </style>
 </head>
 
 <body>
-    <div id="map" style="height: 500px;"></div>
+    <div id="map"></div>
     <div class="w3-container">
         <button id="cameraButton" class="w3-button w3-blue">Ouvrir la caméra</button>
+        <button id="flip-button" class="w3-button w3-yellow">Flip Camera</button>
+        <button id="capture-button" class="w3-button w3-green">Prendre une photo</button>
         <video id="video" autoplay style="display: none; width: 100%; height: auto;"></video>
+        <img id="captured-image" alt="Captured Image">
     </div>
 </body>
 

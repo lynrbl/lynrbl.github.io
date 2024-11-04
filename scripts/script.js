@@ -5,7 +5,6 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
 }).addTo(map);
 
-
 const markers = [
     L.marker([46.236853, 6.126938]).addTo(map),
     L.marker([46.19017, 6.114063]).addTo(map),
@@ -21,7 +20,6 @@ markers.forEach(marker => {
         showMarkerDetails(marker);
     });
 });
-showMarkerDetails(marker1);
 
 function showMarkerDetails(marker) {
     const details = `
@@ -34,17 +32,54 @@ function showMarkerDetails(marker) {
     document.body.innerHTML = details;
 }
 
-function backToMap() {
-    location.reload();
-}
+let currentStream;
+let usingFrontCamera = true;
 
-async function openCamera() {
+const videoElement = document.getElementById('video');
+const capturedImage = document.getElementById('captured-image');
+
+async function startCamera(facingMode = 'user') {
+    if (currentStream) {
+        currentStream.getTracks().forEach(track => track.stop());
+    }
+
     try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        const videoElement = document.getElementById('video');
-        videoElement.srcObject = stream;
+        currentStream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: facingMode }
+        });
+        videoElement.srcObject = currentStream;
         videoElement.style.display = 'block';
-    } catch (err) {
-        console.error("Erreur d'accès à la caméra", err);
+    } catch (error) {
+        console.error("Erreur d'accès à la caméra", error);
+        alert("Impossible d'accéder à la caméra.");
     }
 }
+
+document.getElementById('cameraButton').addEventListener('click', () => {
+    startCamera(usingFrontCamera ? 'user' : 'environment');
+});
+
+document.getElementById('flip-button').addEventListener('click', () => {
+    usingFrontCamera = !usingFrontCamera;
+    startCamera(usingFrontCamera ? 'user' : 'environment');
+});
+
+document.getElementById('capture-button').addEventListener('click', () => {
+    captureImage();
+});
+
+function captureImage() {
+    const canvas = document.createElement('canvas');
+    canvas.width = videoElement.videoWidth;
+    canvas.height = videoElement.videoHeight;
+
+    const context = canvas.getContext('2d');
+    context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+
+    const imageDataUrl = canvas.toDataURL('image/jpeg');
+    localStorage.setItem("imagePhoto", imageDataUrl);
+    capturedImage.src = imageDataUrl;
+    capturedImage.style.display = 'block';
+}
+
+startCamera();
