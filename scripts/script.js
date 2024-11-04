@@ -14,15 +14,16 @@ let marker5 = L.marker([46.2044, 6.143]).addTo(map);
 let marker6 = L.marker([43.2044, 5.32]).addTo(map);
 let marker7 = L.marker([49.2044, 6.2]).addTo(map);
 
-// map.on('click', (e) => {
-//     const { lat, lng } = e.latlng;
-//     const newMarker = L.marker([lat, lng]).addTo(map);
+map.on('click', (e) => {
+    const { lat, lng } = e.latlng;
+    showMarkerDetails(marker1);
+    // const newMarker = L.marker([lat, lng]).addTo(map);
 
-//     newMarker.on('click', () => {
-//         showMarkerDetails(newMarker);
-//     });
-// });
-showMarkerDetails(marker1);
+    // newMarker.on('click', () => {
+    //     showMarkerDetails(newMarker);
+    // });
+});
+
 
 function showMarkerDetails(marker) {
     const details = `
