@@ -1,6 +1,5 @@
 "use strict";
 
-// Initialisation de la carte Leaflet
 const map = L.map('map').setView([46.2044, 6.1432], 13);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
@@ -16,20 +15,19 @@ const markers = [
     L.marker([49.2044, 6.2]).addTo(map)
 ];
 
-// Ajouter les popups
 markers.forEach(marker => {
     marker.on('click', () => {
+        map.closePopup();
+
         marker.bindPopup(
             `<div class="w3-container">
                 <h3>Détails de l'Objet Caché</h3>
                 <p>Coordonnées : ${marker.getLatLng().toString()}</p>
             </div>`
-        );
-        marker.openPopup();
+        ).openPopup();
     });
 });
 
-// Initialisation de la caméra
 let currentStream;
 let usingFrontCamera = true;
 const videoElement = document.getElementById('video');
