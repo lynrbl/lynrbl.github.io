@@ -18,7 +18,7 @@ const markers = [
 markers.forEach(marker => {
     marker.on('click', () => {
         map.closePopup();
-
+        console.log("ouvre le popup");
         marker.bindPopup(
             `<div class="w3-container">
                 <h3>Détails de l'Objet Caché</h3>
@@ -34,6 +34,7 @@ const videoElement = document.getElementById('video');
 const capturedImage = document.getElementById('captured-image');
 
 async function startCamera(facingMode = 'user') {
+    console.log("camera");
     if (currentStream) {
         currentStream.getTracks().forEach(track => track.stop());
     }
@@ -64,6 +65,7 @@ document.getElementById('capture-button').addEventListener('click', () => {
 });
 
 function captureImage() {
+    console.log("capture une image");
     const canvas = document.createElement('canvas');
     canvas.width = videoElement.videoWidth;
     canvas.height = videoElement.videoHeight;
