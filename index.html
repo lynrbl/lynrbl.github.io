@@ -1,41 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
-
-    <style>
-        #map {
-            height: 500px;
-            width: 100%;
-        }
-        #captured-image {
-            width: 100%;
-            height: auto;
-            display: none;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PWA Transcription</title>
 </head>
-
 <body>
-
-    <div id="map"></div>
-
-    <div class="w3-container">
-        <button id="cameraButton" class="w3-button w3-blue">Ouvrir la caméra</button>
-        <button id="flip-button" class="w3-button w3-yellow">Flip Camera</button>
-        <button id="capture-button" class="w3-button w3-green">Prendre une photo</button>
-        <video id="video" autoplay style="display: none; width: 100%; height: auto;"></video>
-        <img id="captured-image" alt="Captured Image">
+  <div id="app">
+    <button id="start-record">Start Recording</button>
+    <button id="stop-record" disabled>Stop Recording</button>
+    <div id="messages">
+      <div id="status">Ready to record</div>
+      <ul id="transcriptions"></ul>
     </div>
-
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script type="module" src="scripts/script.js"></script> 
+  </div>
+  <script type="module" src="./main.js"></script>
 </body>
-
 </html>
