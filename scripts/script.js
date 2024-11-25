@@ -1,110 +1,123 @@
-// DOM Elements
-const startBtn = document.getElementById('start-record');
-const stopBtn = document.getElementById('stop-record');
-const statusDiv = document.getElementById('status');
-const transcriptionsList = document.getElementById('transcriptions');
+// Sélection des éléments HTML
+const boutonDemarrer = document.getElementById('start-record');
+const boutonArreter = document.getElementById('stop-record');
+const divStatut = document.getElementById('status');
+const listeTranscriptions = document.getElementById('transcriptions');
 
-let mediaRecorder;
-let audioChunks = [];
+// Variables globales pour gérer l'enregistrement audio
+let enregistreurMedia; // Permet d'enregistrer l'audio
+let morceauxAudio = []; // Stocke les morceaux d'audio enregistrés
 
-// API Key and URLs
-const API_KEY = '4JXuZq6cpFRZRpUNg7ZGkpn5ikWnxarDrI0T4P5lbs6rcuhX7LRTUumzS9pEZF-zW7I51_EIupOLtOzp';
-const TRANSCRIPTION_URL = 'https://api.infomaniak.com/1/ai/272/openai/audio/transcriptions';
-const RESULTS_URL = 'https://api.infomaniak.com/1/ai/272/results';
+// Clé API et URLs de l'API Infomaniak
+const CLE_API = '4JXuZq6cpFRZRpUNg7ZGkpn5ikWnxarDrI0T4P5lbs6rcuhX7LRTUumzS9pEZF-zW7I51_EIupOLtOzp';
+const URL_TRANSCRIPTION = 'https://api.infomaniak.com/1/ai/272/openai/audio/transcriptions';
+const URL_RESULTATS = 'https://api.infomaniak.com/1/ai/272/results';
 
-// Start recording
-startBtn.addEventListener('click', async () => {
+// Quand l'utilisateur clique sur "Démarrer l'enregistrement"
+boutonDemarrer.addEventListener('click', async () => {
   try {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    mediaRecorder = new MediaRecorder(stream);
+    // Demande d'accès au microphone
+    const flux = await navigator.mediaDevices.getUserMedia({ audio: true });
 
-    mediaRecorder.onstart = () => {
-      audioChunks = [];
-      statusDiv.textContent = 'Recording...';
-      startBtn.disabled = true;
-      stopBtn.disabled = false;
+    // Création d'un enregistreur à partir du flux audio
+    enregistreurMedia = new MediaRecorder(flux);
+
+    // Quand l'enregistrement commence
+    enregistreurMedia.onstart = () => {
+      morceauxAudio = []; // Réinitialiser les morceaux d'audio
+      divStatut.textContent = 'Enregistrement en cours...'; // Met à jour le statut
+      boutonDemarrer.disabled = true; // Désactive le bouton "Démarrer"
+      boutonArreter.disabled = false; // Active le bouton "Arrêter"
     };
 
-    mediaRecorder.ondataavailable = (event) => {
-      audioChunks.push(event.data);
+    // Quand des données audio sont disponibles
+    enregistreurMedia.ondataavailable = (evenement) => {
+      morceauxAudio.push(evenement.data); // Ajoute les morceaux audio
     };
 
-    mediaRecorder.onstop = () => {
-      statusDiv.textContent = 'Uploading...';
-      const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-      sendAudioToAPI(audioBlob);
+    // Quand l'enregistrement s'arrête
+    enregistreurMedia.onstop = () => {
+      divStatut.textContent = 'Téléchargement du fichier audio...'; // Met à jour le statut
+      const audioBlob = new Blob(morceauxAudio, { type: 'audio/wav' }); // Crée un fichier audio
+      envoyerAudioVersAPI(audioBlob); // Envoie l'audio à l'API
     };
 
-    mediaRecorder.start();
-  } catch (error) {
-    console.error('Error accessing microphone:', error);
-    statusDiv.textContent = 'Microphone access denied!';
+    enregistreurMedia.start(); // Démarre l'enregistrement
+  } catch (erreur) {
+    // En cas d'erreur, afficher un message
+    console.error('Erreur d\'accès au microphone :', erreur);
+    divStatut.textContent = 'Erreur : Microphone inaccessible.';
   }
 });
 
-// Stop recording
-stopBtn.addEventListener('click', () => {
-  if (mediaRecorder) {
-    mediaRecorder.stop();
-    stopBtn.disabled = true;
-    startBtn.disabled = false;
+// Quand l'utilisateur clique sur "Arrêter l'enregistrement"
+boutonArreter.addEventListener('click', () => {
+  if (enregistreurMedia) {
+    enregistreurMedia.stop(); // Arrête l'enregistrement
+    boutonArreter.disabled = true; // Désactive le bouton "Arrêter"
+    boutonDemarrer.disabled = false; // Active le bouton "Démarrer"
   }
 });
 
-// Send audio to API
-async function sendAudioToAPI(audioBlob) {
+// Fonction pour envoyer l'audio à l'API Infomaniak
+async function envoyerAudioVersAPI(audioBlob) {
+  // Préparer les données pour l'API
   const formData = new FormData();
   formData.append('file', audioBlob, 'audio.wav');
-  formData.append('model', 'whisper');
+  formData.append('model', 'whisper'); // Modèle utilisé pour la transcription
 
   try {
-    const response = await fetch(TRANSCRIPTION_URL, {
+    // Envoyer une requête POST à l'API
+    const reponse = await fetch(URL_TRANSCRIPTION, {
       method: 'POST',
       headers: {
-        Authorization: `Bearer ${API_KEY}`,
+        Authorization: `Bearer ${CLE_API}`, // Ajoute la clé API
       },
       body: formData,
     });
 
-    const { batch_id } = await response.json();
-    statusDiv.textContent = 'Processing...';
-    pollForResult(batch_id);
-  } catch (error) {
-    console.error('Error sending audio to API:', error);
-    statusDiv.textContent = 'Error uploading audio!';
+    const { batch_id } = await reponse.json(); // Récupère l'identifiant de traitement
+    divStatut.textContent = 'Traitement de l\'audio...'; // Met à jour le statut
+    verifierResultat(batch_id); // Vérifie le statut de la transcription
+  } catch (erreur) {
+    console.error('Erreur lors de l\'envoi de l\'audio :', erreur);
+    divStatut.textContent = 'Erreur : Impossible d\'envoyer l\'audio.';
   }
 }
 
-// Poll for transcription result
-async function pollForResult(batchId) {
+// Fonction pour vérifier si la transcription est terminée
+async function verifierResultat(batchId) {
   try {
-    const response = await fetch(`${RESULTS_URL}/${batchId}`, {
+    // Envoyer une requête GET pour vérifier le statut
+    const reponse = await fetch(`${URL_RESULTATS}/${batchId}`, {
       method: 'GET',
       headers: {
-        Authorization: `Bearer ${API_KEY}`,
+        Authorization: `Bearer ${CLE_API}`, // Ajoute la clé API
       },
     });
 
-    const result = await response.json();
+    const resultat = await reponse.json();
 
-    if (result.status === 'success') {
-      const transcription = await fetch(result.url).then((res) => res.text());
-      displayTranscription(transcription);
-    } else if (result.status === 'processing') {
-      setTimeout(() => pollForResult(batchId), 2000);
+    if (resultat.status === 'success') {
+      // Si la transcription est prête
+      const transcription = await fetch(resultat.url).then((res) => res.text());
+      afficherTranscription(transcription); // Affiche la transcription
+    } else if (resultat.status === 'processing') {
+      // Si la transcription est encore en cours, réessayer après 2 secondes
+      setTimeout(() => verifierResultat(batchId), 2000);
     } else {
-      statusDiv.textContent = 'Error processing transcription!';
+      divStatut.textContent = 'Erreur : Impossible de traiter la transcription.';
     }
-  } catch (error) {
-    console.error('Error polling transcription result:', error);
-    statusDiv.textContent = 'Error retrieving transcription!';
+  } catch (erreur) {
+    console.error('Erreur lors de la vérification :', erreur);
+    divStatut.textContent = 'Erreur : Problème de récupération des résultats.';
   }
 }
 
-// Display transcription
-function displayTranscription(transcription) {
-  const listItem = document.createElement('li');
-  listItem.textContent = transcription;
-  transcriptionsList.appendChild(listItem);
-  statusDiv.textContent = 'Ready to record';
+// Fonction pour afficher la transcription dans la liste
+function afficherTranscription(transcription) {
+  const itemListe = document.createElement('li'); // Crée un élément de liste
+  itemListe.textContent = transcription; // Ajoute la transcription au texte
+  listeTranscriptions.appendChild(itemListe); // Ajoute l'élément à la liste
+  divStatut.textContent = 'Prêt à enregistrer'; // Met à jour le statut
 }

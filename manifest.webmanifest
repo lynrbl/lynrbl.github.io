@@ -1,8 +1,8 @@
 {
     "lang": "en",
     "dir": "ltr",
-    "name": "Random Hello World PWA",
-    "description": "Says \"Hello World!\" in a random human language, on a random background color. It's a PWA, so you can try it in your browser, and add it to your home screen.",
+    "name": "transmision du son en texte",
+    "description": "transmet le son en texte",
     "short_name": "Hello World",
     "scope": "/",
     "start_url": "/",
