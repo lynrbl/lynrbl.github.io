@@ -1,108 +1,82 @@
-const boutonDemarrer = document.getElementById('start-record');
-const boutonArreter = document.getElementById('stop-record');
-const divStatut = document.getElementById('status');
-const listeTranscriptions = document.getElementById('transcriptions');
+"use strict";
 
-let enregistreurMedia;
-let morceauxAudio = [];
+const map = L.map('map').setView([46.2044, 6.1432], 13);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+}).addTo(map);
 
-const CLE_API = '4JXuZq6cpFRZRpUNg7ZGkpn5ikWnxarDrI0T4P5lbs6rcuhX7LRTUumzS9pEZF-zW7I51_EIupOLtOzp';
-const URL_TRANSCRIPTION = 'https://api.infomaniak.com/1/ai/272/openai/audio/transcriptions';
-const URL_RESULTATS = 'https://api.infomaniak.com/1/ai/272/results';
+const markers = [
+    L.marker([46.236853, 6.126938]).addTo(map),
+    L.marker([46.19017, 6.114063]).addTo(map),
+    L.marker([46.190764, 6.151485]).addTo(map),
+    L.marker([46.181257, 6.102905]).addTo(map),
+    L.marker([46.2044, 6.143]).addTo(map),
+    L.marker([43.2044, 5.32]).addTo(map),
+    L.marker([49.2044, 6.2]).addTo(map)
+];
 
-boutonDemarrer.addEventListener('click', async () => {
-  try {
-    const flux = await navigator.mediaDevices.getUserMedia({ audio: true });
-
-    enregistreurMedia = new MediaRecorder(flux);
-
-
-    enregistreurMedia.onstart = () => {
-      morceauxAudio = [];
-      divStatut.textContent = 'Enregistrement en cours...';
-      boutonDemarrer.disabled = true;
-      boutonArreter.disabled = false;
-    };
-
-    enregistreurMedia.ondataavailable = (evenement) => {
-      morceauxAudio.push(evenement.data);
-    };
-
-    enregistreurMedia.onstop = () => {
-      divStatut.textContent = 'Téléchargement du fichier audio...';
-      const audioBlob = new Blob(morceauxAudio, { type: 'audio/wav' });
-      envoyerAudioVersAPI(audioBlob);
-    };
-
-    enregistreurMedia.start();
-  } catch (erreur) {
-    console.error('Erreur d\'accès au microphone :', erreur);
-    divStatut.textContent = 'Erreur : Microphone inaccessible.';
-  }
+markers.forEach(marker => {
+    marker.on('click', () => {
+        map.closePopup();
+        console.log("ouvre le popup");
+        marker.bindPopup(
+            `<div class="w3-container">
+                <h3>Détails de l'Objet Caché</h3>
+                <p>Coordonnées : ${marker.getLatLng().toString()}</p>
+            </div>`
+        ).openPopup();
+    });
 });
 
-boutonArreter.addEventListener('click', () => {
-  if (enregistreurMedia) {
-    enregistreurMedia.stop();
-    boutonArreter.disabled = true;
-    boutonDemarrer.disabled = false;
-  }
-});
+let currentStream;
+let usingFrontCamera = true;
+const videoElement = document.getElementById('video');
+const capturedImage = document.getElementById('captured-image');
 
-async function envoyerAudioVersAPI(audioBlob) {
-
-  const formData = new FormData();
-  formData.append('file', audioBlob, 'audio.wav');
-  formData.append('model', 'whisper');
-
-  try {
-    const reponse = await fetch(URL_TRANSCRIPTION, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${CLE_API}`, 
-      },
-      body: formData,
-    });
-
-    const { batch_id } = await reponse.json(); 
-    divStatut.textContent = 'Traitement de l\'audio...';
-    verifierResultat(batch_id); 
-  } catch (erreur) {
-    console.error('Erreur lors de l\'envoi de l\'audio :', erreur);
-    divStatut.textContent = 'Erreur : Impossible d\'envoyer l\'audio.';
-  }
-}
-
-async function verifierResultat(batchId) {
-  try {
-    const reponse = await fetch(`${URL_RESULTATS}/${batchId}`, {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${CLE_API}`,
-      },
-    });
-
-    const resultat = await reponse.json();
-
-    if (resultat.status === 'success') {
-      const transcription = await fetch(resultat.url).then((res) => res.text());
-      afficherTranscription(transcription);
-    } else if (resultat.status === 'processing') {
-
-      setTimeout(() => verifierResultat(batchId), 2000);
-    } else {
-      divStatut.textContent = 'Erreur : Impossible de traiter la transcription.';
+async function startCamera(facingMode = 'user') {
+    console.log("camera");
+    if (currentStream) {
+        currentStream.getTracks().forEach(track => track.stop());
     }
-  } catch (erreur) {
-    console.error('Erreur lors de la vérification :', erreur);
-    divStatut.textContent = 'Erreur : Problème de récupération des résultats.';
-  }
+
+    try {
+        currentStream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: facingMode }
+        });
+        videoElement.srcObject = currentStream;
+        videoElement.style.display = 'block';
+    } catch (error) {
+        console.error("Erreur d'accès à la caméra", error);
+        alert("Impossible d'accéder à la caméra.");
+    }
 }
 
+document.getElementById('cameraButton').addEventListener('click', () => {
+    startCamera(usingFrontCamera ? 'user' : 'environment');
+});
 
-function afficherTranscription(transcription) {
-  const itemListe = document.createElement('li');
-  itemListe.textContent = transcription;
-  listeTranscriptions.appendChild(itemListe);
-  divStatut.textContent = 'Prêt à enregistrer'; 
+document.getElementById('flip-button').addEventListener('click', () => {
+    usingFrontCamera = !usingFrontCamera;
+    startCamera(usingFrontCamera ? 'user' : 'environment');
+});
+
+document.getElementById('capture-button').addEventListener('click', () => {
+    captureImage();
+});
+
+function captureImage() {
+    console.log("capture une image");
+    const canvas = document.createElement('canvas');
+    canvas.width = videoElement.videoWidth;
+    canvas.height = videoElement.videoHeight;
+
+    const context = canvas.getContext('2d');
+    context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+
+    const imageDataUrl = canvas.toDataURL('image/jpeg');
+    localStorage.setItem("imagePhoto", imageDataUrl);
+    capturedImage.src = imageDataUrl;
+    capturedImage.style.display = 'block';
 }
+
+startCamera();
