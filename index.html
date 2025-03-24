@@ -76,13 +76,15 @@
         }
 
     </script>
-    <button onclick="init()">Connexion</button>
+    <button onclick="init()">init</button>
+    <button onclick="connect()">Connexion</button>
     <button onclick="sendCmd('toi')">Joueur 1</button>
-    <button onclick="sendCmd('toggle')">Joueur 2</button>
+    <button onclick="sendCmd('toi')">Joueur 2</button>
+ 
 
     <label for="myCmdInput">Commande: </label>
     <input type="text" id="myCmdInput" />
-    <button onclick="">Envoyer</button>
+    <button onclick="sendCmd(document.getElementById('myCmdInput').value)">Envoyer</button>
 
 </body>
 
