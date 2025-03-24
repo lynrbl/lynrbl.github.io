@@ -76,13 +76,13 @@
         }
 
     </script>
-    <button onclick="init()">Appairer un équipement bluetooth (BT)</button>
-    <button onclick="listServices()">Lister les identifiants de services BT disponibles</button>
-    <button onclick="connect()">Se connecter aux canaux réception (RT) / émission (TX) BT</button>
+    <button onclick="init()">Connexion</button>
+    <button onclick="sendCmd('toi')">Joueur 1</button>
+    <button onclick="sendCmd('toggle')">Joueur 2</button>
 
     <label for="myCmdInput">Commande: </label>
     <input type="text" id="myCmdInput" />
-    <button onclick="sendCmd(document.getElementById('myCmdInput').value)">Envoyer</button>
+    <button onclick="">Envoyer</button>
 
 </body>
 
