@@ -13,9 +13,6 @@
         <div>Application de démonstration Bluetooth</div>
         <button class="footer-btn" onclick="init()">Connexion</button>
     </div>
-
-    <div id="status">None</div>
-
     <div id="player-buttons">
         <button class="player-btn red" onclick="sendCmd('rouge')">Joueur 1</button>
         <button class="player-btn blue" onclick="sendCmd('bleu')">Joueur 2</button>
@@ -38,7 +35,6 @@
             }
 
             device = await navigator.bluetooth.requestDevice({ filters: [{ services: [serviceUuid] }] });
-            document.getElementById("status").innerText = `device.name=${device.name}`;
             console.log(`device.name=${device.name}`);
             connect();
         }
@@ -54,10 +50,7 @@
                 const receivedValue = event.target.value;
                 const message = new TextDecoder().decode(receivedValue);
                 console.log('Received message:', message);
-                document.getElementById("status").innerText = message;
             });
-
-            document.getElementById("status").innerText = "Connexion RX/TX effectuée";
         }
 
         async function sendCmd(cmd) {
