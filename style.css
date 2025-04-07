@@ -1,0 +1,57 @@
+
+    body {
+        font-family: sans-serif;
+        margin: 20px;
+        background-color: #f0f4f8;
+        color: #333;
+    }
+
+    button {
+        padding: 10px 20px;
+        margin: 8px;
+        font-size: 16px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+    }
+
+    button:hover {
+        background-color: #ddd;
+    }
+
+    #player-buttons {
+        margin-top: 20px;
+        display: flex;
+        gap: 20px;
+    }
+
+    .player-btn {
+        flex: 1;
+        font-size: 24px;
+        font-weight: bold;
+        padding: 20px;
+        border-radius: 12px;
+        color: white;
+    }
+
+    .player-btn.red {
+        background-color: #e74c3c;
+    }
+
+    .player-btn.blue {
+        background-color: #3498db;
+    }
+
+    #status {
+        margin: 20px 0;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    input[type="text"] {
+        padding: 8px;
+        font-size: 16px;
+        margin-left: 8px;
+    }
+
