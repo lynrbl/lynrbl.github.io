@@ -11,14 +11,13 @@
 <body>
     <div class="top-bar">
         <h1>Led Raicer</h1>
-        <button class="footer-btn" onclick="init()">Connexion</button>
-        <button class="footer-btn" onclick="sendCmd('reset')">Recommencer</button>
+        <button class="btn" onclick="init()">Connexion</button>
+        <button class="btn" onclick="sendCmd('reset')">Recommencer</button>
     </div>
     <div id="player-buttons">
         <button class="player-btn red" onclick="sendCmd('rouge')">Joueur 1</button>
         <button class="player-btn blue" onclick="sendCmd('bleu')">Joueur 2</button>
     </div>
-    <div id="status"></div>
 
     <script>
         // variable globale pour l'envoi et la réception de messages vers l'équipement bluetooth distant
@@ -39,7 +38,6 @@
             //device = await navigator.bluetooth.requestDevice({ acceptAllDevices: true });
             device = await navigator.bluetooth.requestDevice({ filters: [{ services: [serviceUuid] }] });
             let msg = `device.name=${device.name}`;
-            document.getElementById("status").innerText = msg;
             console.log(msg);
             connect();
         }
@@ -59,11 +57,7 @@
                 const receivedValue = event.target.value;
                 const message = new TextDecoder().decode(receivedValue);
                 console.log('Received message:', message);
-                document.getElementById("status").innerText = message;
             });
-
-
-            document.getElementById("status").innerText = "Connexion RX/TX effectuée";
         }
 
         async function sendCmd(cmd) {
