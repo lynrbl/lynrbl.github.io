@@ -62,7 +62,6 @@
 
         async function sendCmd(cmd) {
             const encoder = new TextEncoder();
-            document.getElementById("status").innerText = `commande à envoyer: ${cmd}`;
             const cmdBytes = encoder.encode(cmd);
             await tx.writeValue(cmdBytes);
         }
