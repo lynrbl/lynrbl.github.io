@@ -1,32 +1,24 @@
 html, body {
-    height: 100%;
     margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
     font-family: sans-serif;
-    background-color: #f0f4f8;
-    display: flex;
-    flex-direction: column;
-}
-
-#status {
-    padding: 10px;
-    background: #ddd;
-    font-weight: bold;
-    text-align: center;
 }
 
 #player-buttons {
-    flex: 1;
+    height: 100%;
     display: flex;
     flex-direction: column;
 }
 
 .player-btn {
     flex: 1;
-    font-size: 32px;
+    width: 100%;
+    font-size: 40px;
     font-weight: bold;
     border: none;
     outline: none;
-    width: 100%;
     color: white;
     cursor: pointer;
 }
