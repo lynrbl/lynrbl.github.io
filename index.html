@@ -12,14 +12,12 @@
     <div class="top-bar">
         <h1>Led Raicer</h1>
         <button class="footer-btn" onclick="init()">Connexion</button>
+        <button class="footer-btn" onclick="sendCmd('reset')">Recommencer</button>
     </div>
     <div id="player-buttons">
         <button class="player-btn red" onclick="sendCmd('rouge')">Joueur 1</button>
         <button class="player-btn blue" onclick="sendCmd('bleu')">Joueur 2</button>
-    </div>
-
-    <div class="footer">
-        <button class="footer-btn" onclick="sendCmd('reset')">Recommencer</button>
+        
     </div>
 
     <script>
