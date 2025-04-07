@@ -41,6 +41,7 @@
             let msg = `device.name=${device.name}`;
             document.getElementById("status").innerText = msg;
             console.log(msg);
+            connect();
         }
 
         async function connect() {
