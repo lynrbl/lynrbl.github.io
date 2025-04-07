@@ -21,34 +21,48 @@
     </div>
 
     <script>
-        var rx = null;
+                // variable globale pour l'envoi et la réception de messages vers l'équipement bluetooth distant
+                var rx = null;
         var tx = null;
+
+        // identifiant standardisé pour une communication texte (le nom de ce service est dénommé: Nordic UART)
         const serviceUuid = '6e400001-b5a3-f393-e0a9-e50e24dcca9e';
         let device = null;
 
         async function init() {
+
             if (!('bluetooth' in navigator)) {
                 alert("Support bluetooth non disponible, veuillez activer le mode expérimental")
-                return;
+                return
             }
 
+            //device = await navigator.bluetooth.requestDevice({ acceptAllDevices: true });
             device = await navigator.bluetooth.requestDevice({ filters: [{ services: [serviceUuid] }] });
-            console.log(`device.name=${device.name}`);
-            connect();
+            let msg = `device.name=${device.name}`;
+            document.getElementById("status").innerText = msg;
+            console.log(msg);
         }
 
         async function connect() {
             const server = await device.gatt.connect();
             const service = await server.getPrimaryService(serviceUuid);
             tx = await service.getCharacteristic('6e400002-b5a3-f393-e0a9-e50e24dcca9e');
-            rx = await service.getCharacteristic('6e400003-b5a3-f393-e0a9-e50e24dcca9e');
 
+            rx = await service.getCharacteristic('6e400003-b5a3-f393-e0a9-e50e24dcca9e');
+            // on écoute les notification de l'équipement bluetooth distant
             await rx.startNotifications();
+
+            // on s'abonne au changement d'état de l'objet rx recevant les message de l'équipement BT distant
+            // et on les affiche.
             rx.addEventListener('characteristicvaluechanged', event => {
                 const receivedValue = event.target.value;
                 const message = new TextDecoder().decode(receivedValue);
                 console.log('Received message:', message);
+                document.getElementById("status").innerText = message;
             });
+
+
+            document.getElementById("status").innerText = "Connexion RX/TX effectuée";
         }
 
         async function sendCmd(cmd) {
