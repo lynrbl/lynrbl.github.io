@@ -37,6 +37,7 @@
                 updateScore('rouge');
                 alert(localStorage.getItem('nameRouge') + " a gagné !");
                 resetGame();
+                location.href='index.html';
             }
             else {
                 sendCmd('rouge');
@@ -53,6 +54,7 @@
                 updateScore('bleu');
                 alert(localStorage.getItem('nameBleu') + " a gagné !");
                 resetGame();
+                location.href='index.html';
             }
             else {
                 sendCmd('bleu');
