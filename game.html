@@ -101,10 +101,12 @@
             let current = parseInt(localStorage.getItem(scoreKey) || '0');
             localStorage.setItem(scoreKey, current + 1);
         }
+        
         function declareWinner(color) {
             updateScore(color);
             const name = localStorage.getItem(color === 'rouge' ? 'nameRouge' : 'nameBleu') || (color === 'rouge' ? 'Joueur 1' : 'Joueur 2');
             alert(name + ' a gagné !');
+            sendCmd('reset');
             location.href='index.html';
         }
 
