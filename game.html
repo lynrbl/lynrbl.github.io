@@ -12,8 +12,8 @@
     <div class="top-bar">
         <h1>Led Racer - Jeu</h1>
         <button class="btn" onclick="init()">Connexion</button>
-        <button class="btn" onclick="sendCmd('reset')">Recommencer</button>
-        <button class="btn" id="restart">Recommencer</button>
+        <button class="btn" id="reset">Recommencer</button>
+        <button class="btn" id="reset" onclick="location.href='index.html'">Retour</button>
     </div>
 
     <div id="player-buttons" style="display: none;">
@@ -29,11 +29,7 @@
         var tx = null;
         let device = null;
 
-        document.getElementById('restart').addEventListener('click', () => {
-            clickCountRouge = 0;
-            clickCountBleu = 0;
-            sendCmd('reset');
-        });
+
         const serviceUuid = '6e400001-b5a3-f393-e0a9-e50e24dcca9e';
         document.getElementById('btn-rouge').addEventListener('touchstart', () => {
 
@@ -65,7 +61,11 @@
             }
 
         });
-
+        document.getElementById('reset').addEventListener('click', () => {
+            clickCountRouge = 0;
+            clickCountBleu = 0;
+            sendCmd('reset');
+        });
         async function init() {
             if (!('bluetooth' in navigator)) {
                 alert("Bluetooth non disponible !");
