@@ -49,3 +49,18 @@ html, body {
 .btn:hover {
     background-color: #ddd;
 }
+#player-inputs {
+    text-align: center;
+    margin: 10px;
+}
+
+#player-inputs input {
+    padding: 10px;
+    margin: 5px;
+    font-size: 16px;
+}
+#scores {
+    text-align: center;
+    margin: 20px;
+    font-size: 24px;
+}
