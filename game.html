@@ -22,9 +22,9 @@
     </div>
 
     <script>
-        let clickCountRouge = 0;
-        let clickCountBleu = 0;
-        const WIN_CLICKS = 120;
+        let clickCountRouge = 1;
+        let clickCountBleu = 1;
+        const WIN_CLICKS = 119;
         var rx = null;
         var tx = null;
         let device = null;
@@ -36,7 +36,6 @@
             if (clickCountRouge >= WIN_CLICKS) {
                 updateScore('rouge');
                 alert(localStorage.getItem('nameRouge') + " a gagné !");
-                resetGame();
                 location.href='index.html';
             }
             else {
@@ -53,7 +52,6 @@
             if (clickCountBleu >= WIN_CLICKS) {
                 updateScore('bleu');
                 alert(localStorage.getItem('nameBleu') + " a gagné !");
-                resetGame();
                 location.href='index.html';
             }
             else {
