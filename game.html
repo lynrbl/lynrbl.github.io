@@ -22,8 +22,8 @@
     </div>
 
     <script>
-        let clickCountRouge = 1;
-        let clickCountBleu = 1;
+        let clickCountRouge = 0;
+        let clickCountBleu = 0;
         const WIN_CLICKS = 119;
         var rx = null;
         var tx = null;
@@ -32,35 +32,23 @@
 
         const serviceUuid = '6e400001-b5a3-f393-e0a9-e50e24dcca9e';
         document.getElementById('btn-rouge').addEventListener('touchstart', () => {
-
+            clickCountRouge++;
+            sendCmd('rouge');
+            console.log('Rouge : ' + clickCountRouge);
             if (clickCountRouge >= WIN_CLICKS) {
-                updateScore('rouge');
-                alert(localStorage.getItem('nameRouge') + " a gagné !");
-                location.href='index.html';
+                declareWinner('rouge');
             }
-            else {
-                sendCmd('rouge');
-                clickCountRouge++;
-                console.log('Rouge : ' + clickCountRouge);
-            }
-
-
         });
 
         document.getElementById('btn-bleu').addEventListener('touchstart', () => {
-
+            clickCountBleu++;
+            sendCmd('bleu');
+            console.log('Bleu : ' + clickCountBleu);
             if (clickCountBleu >= WIN_CLICKS) {
-                updateScore('bleu');
-                alert(localStorage.getItem('nameBleu') + " a gagné !");
-                location.href='index.html';
+                declareWinner('bleu');
             }
-            else {
-                sendCmd('bleu');
-                clickCountBleu++;
-                console.log('Bleu : ' + clickCountBleu);
-            }
-
         });
+
         document.getElementById('reset').addEventListener('click', () => {
             clickCountRouge = 0;
             clickCountBleu = 0;
@@ -112,6 +100,12 @@
             let scoreKey = winner === 'rouge' ? 'scoreRouge' : 'scoreBleu';
             let current = parseInt(localStorage.getItem(scoreKey) || '0');
             localStorage.setItem(scoreKey, current + 1);
+        }
+        function declareWinner(color) {
+            updateScore(color);
+            const name = localStorage.getItem(color === 'rouge' ? 'nameRouge' : 'nameBleu') || (color === 'rouge' ? 'Joueur 1' : 'Joueur 2');
+            alert(name + ' a gagné !');
+            resetGame();
         }
 
         function updateButtonLabels() {
