@@ -24,7 +24,7 @@
     <script>
         let clickCountRouge = 0;
         let clickCountBleu = 0;
-        const WIN_CLICKS = 119;
+        const WIN_CLICKS = 120;
         var rx = null;
         var tx = null;
         let device = null;
@@ -101,7 +101,7 @@
             let current = parseInt(localStorage.getItem(scoreKey) || '0');
             localStorage.setItem(scoreKey, current + 1);
         }
-        
+
         function declareWinner(color) {
             updateScore(color);
             const name = localStorage.getItem(color === 'rouge' ? 'nameRouge' : 'nameBleu') || (color === 'rouge' ? 'Joueur 1' : 'Joueur 2');
