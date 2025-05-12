@@ -105,7 +105,7 @@
             updateScore(color);
             const name = localStorage.getItem(color === 'rouge' ? 'nameRouge' : 'nameBleu') || (color === 'rouge' ? 'Joueur 1' : 'Joueur 2');
             alert(name + ' a gagné !');
-            resetGame();
+            location.href='index.html';
         }
 
         function updateButtonLabels() {
