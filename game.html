@@ -32,25 +32,34 @@
 
         const serviceUuid = '6e400001-b5a3-f393-e0a9-e50e24dcca9e';
         document.getElementById('btn-rouge').addEventListener('touchstart', () => {
-            sendCmd('rouge');
-            clickCountRouge++;
-            console.log('Rouge : ' + clickCountRouge);
+
             if (clickCountRouge >= WIN_CLICKS) {
                 updateScore('rouge');
                 alert(localStorage.getItem('nameRouge') + " a gagné !");
                 resetGame();
             }
+            else {
+                sendCmd('rouge');
+                clickCountRouge++;
+                console.log('Rouge : ' + clickCountRouge);
+            }
+
+
         });
 
         document.getElementById('btn-bleu').addEventListener('touchstart', () => {
-            sendCmd('bleu');
-            clickCountBleu++;
-            console.log('Bleu : ' + clickCountBleu);
+
             if (clickCountBleu >= WIN_CLICKS) {
                 updateScore('bleu');
                 alert(localStorage.getItem('nameBleu') + " a gagné !");
                 resetGame();
             }
+            else {
+                sendCmd('bleu');
+                clickCountBleu++;
+                console.log('Bleu : ' + clickCountBleu);
+            }
+
         });
         document.getElementById('reset').addEventListener('click', () => {
             clickCountRouge = 0;
@@ -58,57 +67,57 @@
             sendCmd('reset');
         });
         async function init() {
-                if (!('bluetooth' in navigator)) {
-                    alert("Bluetooth non disponible !");
-                    return;
-                }
-
-                try {
-                    device = await navigator.bluetooth.requestDevice({ filters: [{ services: [serviceUuid] }] });
-                    await connect();
-                    document.getElementById('player-buttons').style.display = 'flex';
-                } catch (err) {
-                    alert("Connexion échouée : " + err);
-                }
+            if (!('bluetooth' in navigator)) {
+                alert("Bluetooth non disponible !");
+                return;
             }
+
+            try {
+                device = await navigator.bluetooth.requestDevice({ filters: [{ services: [serviceUuid] }] });
+                await connect();
+                document.getElementById('player-buttons').style.display = 'flex';
+            } catch (err) {
+                alert("Connexion échouée : " + err);
+            }
+        }
 
         async function connect() {
-                const server = await device.gatt.connect();
-                const service = await server.getPrimaryService(serviceUuid);
-                tx = await service.getCharacteristic('6e400002-b5a3-f393-e0a9-e50e24dcca9e');
-                rx = await service.getCharacteristic('6e400003-b5a3-f393-e0a9-e50e24dcca9e');
+            const server = await device.gatt.connect();
+            const service = await server.getPrimaryService(serviceUuid);
+            tx = await service.getCharacteristic('6e400002-b5a3-f393-e0a9-e50e24dcca9e');
+            rx = await service.getCharacteristic('6e400003-b5a3-f393-e0a9-e50e24dcca9e');
 
-                await rx.startNotifications();
-                rx.addEventListener('characteristicvaluechanged', event => {
-                    const message = new TextDecoder().decode(event.target.value);
-                    console.log('Message reçu :', message);
+            await rx.startNotifications();
+            rx.addEventListener('characteristicvaluechanged', event => {
+                const message = new TextDecoder().decode(event.target.value);
+                console.log('Message reçu :', message);
 
-                    // Exemple simple : le rouge gagne
-                    if (message.includes('rougeWin')) {
-                        updateScore('rouge');
-                    } else if (message.includes('bleuWin')) {
-                        updateScore('bleu');
-                    }
-                });
-            }
+                // Exemple simple : le rouge gagne
+                if (message.includes('rougeWin')) {
+                    updateScore('rouge');
+                } else if (message.includes('bleuWin')) {
+                    updateScore('bleu');
+                }
+            });
+        }
 
         async function sendCmd(cmd) {
-                if (!tx) return;
-                const encoder = new TextEncoder();
-                const data = encoder.encode(cmd);
-                await tx.writeValue(data);
-            }
+            if (!tx) return;
+            const encoder = new TextEncoder();
+            const data = encoder.encode(cmd);
+            await tx.writeValue(data);
+        }
 
         function updateScore(winner) {
-                let scoreKey = winner === 'rouge' ? 'scoreRouge' : 'scoreBleu';
-                let current = parseInt(localStorage.getItem(scoreKey) || '0');
-                localStorage.setItem(scoreKey, current + 1);
-            }
+            let scoreKey = winner === 'rouge' ? 'scoreRouge' : 'scoreBleu';
+            let current = parseInt(localStorage.getItem(scoreKey) || '0');
+            localStorage.setItem(scoreKey, current + 1);
+        }
 
         function updateButtonLabels() {
-                document.getElementById('btn-rouge').textContent = localStorage.getItem('nameRouge') || 'Joueur 1';
-                document.getElementById('btn-bleu').textContent = localStorage.getItem('nameBleu') || 'Joueur 2';
-            }
+            document.getElementById('btn-rouge').textContent = localStorage.getItem('nameRouge') || 'Joueur 1';
+            document.getElementById('btn-bleu').textContent = localStorage.getItem('nameBleu') || 'Joueur 2';
+        }
 
         window.onload = updateButtonLabels;
     </script>
