@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <title>Led Racer - Jeu</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <div class="top-bar">
         <h1>Led Racer - Jeu</h1>
@@ -20,14 +22,35 @@
     </div>
 
     <script>
+        let clickCountRouge = 0;
+        let clickCountBleu = 0;
+        const WIN_CLICKS = 120;
         var rx = null;
         var tx = null;
         let device = null;
 
         const serviceUuid = '6e400001-b5a3-f393-e0a9-e50e24dcca9e';
+        document.getElementById('btn-rouge').addEventListener('touchstart', () => {
+            sendCmd('rouge');
+            clickCountRouge++;
+            console.log('Rouge : ' + clickCountRouge);
+            if (clickCountRouge >= WIN_CLICKS) {
+                updateScore('rouge');
+                alert(localStorage.getItem('nameRouge') + " a gagné !");
+                resetGame();
+            }
+        });
 
-        document.getElementById('btn-rouge').addEventListener('touchstart', () => sendCmd('rouge'));
-        document.getElementById('btn-bleu').addEventListener('touchstart', () => sendCmd('bleu'));
+        document.getElementById('btn-bleu').addEventListener('touchstart', () => {
+            sendCmd('bleu');
+            clickCountBleu++;
+            console.log('Bleu : ' + clickCountBleu);
+            if (clickCountBleu >= WIN_CLICKS) {
+                updateScore('bleu');
+                alert(localStorage.getItem('nameBleu') + " a gagné !");
+                resetGame();
+            }
+        });
 
         async function init() {
             if (!('bluetooth' in navigator)) {
@@ -85,4 +108,5 @@
         window.onload = updateButtonLabels;
     </script>
 </body>
+
 </html>
