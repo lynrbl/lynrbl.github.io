@@ -1,0 +1,95 @@
+let clickCountRouge = 0;
+        let clickCountBleu = 0;
+        const WIN_CLICKS = 120;
+        var rx = null;
+        var tx = null;
+        let device = null;
+
+
+        const serviceUuid = '6e400001-b5a3-f393-e0a9-e50e24dcca9e';
+        document.getElementById('btn-rouge').addEventListener('touchstart', () => {
+            clickCountRouge++;
+            sendCmd('rouge');
+            console.log('Rouge : ' + clickCountRouge);
+            if (clickCountRouge >= WIN_CLICKS) {
+                declareWinner('rouge');
+            }
+        });
+
+        document.getElementById('btn-bleu').addEventListener('touchstart', () => {
+            clickCountBleu++;
+            sendCmd('bleu');
+            console.log('Bleu : ' + clickCountBleu);
+            if (clickCountBleu >= WIN_CLICKS) {
+                declareWinner('bleu');
+            }
+        });
+
+        document.getElementById('reset').addEventListener('click', () => {
+            clickCountRouge = 0;
+            clickCountBleu = 0;
+            sendCmd('reset');
+        });
+        document.getElementById('connexion').addEventListener('click', init);
+        async function init() {
+            if (!('bluetooth' in navigator)) {
+                alert("Bluetooth non disponible !");
+                return;
+            }
+
+            try {
+                device = await navigator.bluetooth.requestDevice({ filters: [{ services: [serviceUuid] }] });
+                await connect();
+                document.getElementById('player-buttons').style.display = 'flex';
+            } catch (err) {
+                alert("Connexion échouée : " + err);
+            }
+        }
+
+        async function connect() {
+            const server = await device.gatt.connect();
+            const service = await server.getPrimaryService(serviceUuid);
+            tx = await service.getCharacteristic('6e400002-b5a3-f393-e0a9-e50e24dcca9e');
+            rx = await service.getCharacteristic('6e400003-b5a3-f393-e0a9-e50e24dcca9e');
+
+            await rx.startNotifications();
+            rx.addEventListener('characteristicvaluechanged', event => {
+                const message = new TextDecoder().decode(event.target.value);
+                console.log('Message reçu :', message);
+
+                // Exemple simple : le rouge gagne
+                if (message.includes('rougeWin')) {
+                    updateScore('rouge');
+                } else if (message.includes('bleuWin')) {
+                    updateScore('bleu');
+                }
+            });
+        }
+
+        async function sendCmd(cmd) {
+            if (!tx) return;
+            const encoder = new TextEncoder();
+            const data = encoder.encode(cmd);
+            await tx.writeValue(data);
+        }
+
+        function updateScore(winner) {
+            let scoreKey = winner === 'rouge' ? 'scoreRouge' : 'scoreBleu';
+            let current = parseInt(localStorage.getItem(scoreKey) || '0');
+            localStorage.setItem(scoreKey, current + 1);
+        }
+
+        function declareWinner(color) {
+            updateScore(color);
+            const name = localStorage.getItem(color === 'rouge' ? 'nameRouge' : 'nameBleu') || (color === 'rouge' ? 'Joueur 1' : 'Joueur 2');
+            alert(name + ' a gagné !');
+            sendCmd('reset');
+            location.href='index.html';
+        }
+
+        function updateButtonLabels() {
+            document.getElementById('btn-rouge').textContent = localStorage.getItem('nameRouge') || 'Joueur 1';
+            document.getElementById('btn-bleu').textContent = localStorage.getItem('nameBleu') || 'Joueur 2';
+        }
+
+        window.onload = updateButtonLabels;

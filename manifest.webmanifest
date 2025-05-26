@@ -1,0 +1,14 @@
+{
+    "lang": "fr",
+    "dir": "ltr",
+    "name": "LedRaicer",
+    "description": "application de course avec un affichage avec des leds",
+    "short_name": "LDR",
+    "scope": "/",
+    "start_url": "/",
+    "display": "standalone",
+    "orientation": "any",
+    "theme_color": "#000000",
+    "background_color": "#005097",
+    "icons": []
+}

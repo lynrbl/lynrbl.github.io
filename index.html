@@ -5,6 +5,7 @@
     <title>Led Racer - Accueil</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="/manifest.webmanifest" />
 </head>
 <body>
     <div class="top-bar">
@@ -14,7 +15,7 @@
     <div id="player-inputs">
         <input type="text" id="name-rouge" placeholder="Nom Joueur 1 (Rouge)">
         <input type="text" id="name-bleu" placeholder="Nom Joueur 2 (Bleu)">
-        <button class="btn" onclick="saveNames()">Valider les noms</button>
+        <button class="btn" id="save-names">Valider les noms</button>
         <button class="btn" onclick="location.href='game.html'">Commencer le jeu</button>
     </div>
 
@@ -23,26 +24,6 @@
         <p><span id="score-rouge">0</span> - <span id="score-bleu">0</span></p>
     </div>
 
-    <script>
-        function saveNames() {
-            const nameRouge = document.getElementById('name-rouge').value || 'Joueur 1';
-            const nameBleu = document.getElementById('name-bleu').value || 'Joueur 2';
-
-            localStorage.setItem('nameRouge', nameRouge);
-            localStorage.setItem('nameBleu', nameBleu);
-
-            if (!localStorage.getItem('scoreRouge')) localStorage.setItem('scoreRouge', '0');
-            if (!localStorage.getItem('scoreBleu')) localStorage.setItem('scoreBleu', '0');
-
-            updateScores();
-        }
-
-        function updateScores() {
-            document.getElementById('score-rouge').textContent = localStorage.getItem('scoreRouge') || '0';
-            document.getElementById('score-bleu').textContent = localStorage.getItem('scoreBleu') || '0';
-        }
-
-        window.onload = updateScores;
-    </script>
+    <script src="js/script.js"></script>
 </body>
 </html>
